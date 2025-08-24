@@ -7,7 +7,7 @@
 
 <section class="hero">
     <div class="hero-content">
-        <img src="{% static 'images/daily-basis.jpg' %}" alt="Daily Basis" class="hero-logo">
+        <img src="{% static 'images/daily-basis.png' %}" alt="Daily Basis" class="hero-logo">
         <h1><span class="bold">Fresh Groceries</span> <span class="highlight">Daily</span></h1>
         <p>Get the freshest produce, dairy, and essentials delivered to your doorstep.<br>
             Quality you can trust, convenience you deserve.</p>
@@ -102,7 +102,7 @@
                 </div>
             </div>
         </a>
-        <button class="btn-view-product" onclick="window.location.href='{% url 'details_page' product_id=product.id %}'">View Product</button>
+        <button class="btn-view-product">View Product</button>
     </div>
     {% endfor %}
     </div>
