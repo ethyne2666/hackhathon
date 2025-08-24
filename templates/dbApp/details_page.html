@@ -1,190 +1,77 @@
 {% extends "dbApp/base.html" %}
 {% load static %}
 
-{% block title %}{{ product.name }} Details{% endblock %}
+{% block title %}Product Details{% endblock %}
 
 {% block content %}
-<div class="product-detail-page">
-    <div class="product-detail-container">
-        <!-- Product Image Section -->
-        <div class="product-detail-image-box">
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-detail-image">
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid product-detail-img">
         </div>
-        <!-- Product Info Section -->
-        <div class="product-detail-info-box">
-            <h1 class="product-detail-name">{{ product.name }}</h1>
-            <p class="product-detail-category">{{ product.category }}</p>
-            <p class="product-detail-price">₹{{ product.price }}</p>
-            <p class="product-detail-description">{{ product.description }}</p>
-            
-            <div class="quantity-control-detail">
-                <button class="btn-quantity-detail minus-btn" data-product-id="{{ product.id }}">-</button>
-                <span class="quantity-display" id="qty-{{ product.id }}">1</span>
-                <button class="btn-quantity-detail plus-btn" data-product-id="{{ product.id }}">+</button>
-            </div>
-            <button class="btn-add-to-cart-detail" data-product-id="{{ product.id }}" data-price="{{ product.price }}">Add to Cart</button>
+        <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            <p class="text-muted">{{ product.category }}</p>
+            <h2 class="price">₹{{ product.price|floatformat:2 }}</h2>
+            <p>{{ product.description|linebreaksbr }}</p>
 
-            <form method="post" action="{% url 'purchase_schedule' product.id %}">
+            <form id="add-to-cart-form" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" value="{{ product.id }}">
-                <input type="hidden" name="price" value="{{ product.price }}">
-                <button type="submit" class="btn-add-to-cart-schedule">Schedule My Order</button>
-       </form>
-            
-            <p class="stock-status-detail">
-                {% if product.stock > 0 %}
-                    In Stock ({{ product.stock }} available)
-                {% else %}
-                    Out of Stock
-                {% endif %}
-            </p>
+                <div class="d-flex align-items-center mb-3">
+                    <label for="quantity" class="me-3">Quantity:</label>
+                    <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control" style="width: 80px;">
+                </div>
+                <button type="submit" class="btn btn-primary add-to-cart-btn">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                </button>
+            </form>
         </div>
     </div>
 </div>
-
-<!-- Related Products Section -->
-<div class="related-products-section">
-    <h3>Related Products</h3>
-    <div class="product-grid">
-        {% for related_product in related_products %}
-            <a href="{% url 'details_page' product_id=related_product.id %}" class="product-link">
-                <div class="product-card">
-                    {% if related_product.image %}
-                        <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}" class="product-image">
-                    {% else %}
-                        <img src="{% static 'images/placeholder_product.jpg' %}" alt="No Image" class="product-image">
-                    {% endif %}
-                    <div class="product-info-container">
-                        <h3 class="product-title">{{ related_product.name }}</h3>
-                        <span class="product-category">{{ related_product.category }}</span>
-                        <div class="product-price-and-action">
-                            <span class="product-price">₹{{ related_product.price }}</span>
-                            <button class="add-to-cart-btn" data-product-id="{{ related_product.id }}"><i class="fa-solid fa-plus"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
-</div>
-
 {% endblock content %}
 
 {% block scripts %}
 <script>
-    // Helper function to get CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    // Function to show a green alert notification
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.classList.add('notification', 'success');
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        void notification.offsetWidth; 
-        notification.classList.add('show');
-
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 500); 
-        }, 3000); 
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-        const addToCartBtn = document.querySelector('.btn-add-to-cart-detail');
-        
-        // Ensure the button exists before proceeding
-        if (!addToCartBtn) {
-            console.error("Error: '.btn-add-to-cart-detail' button not found on the page.");
-            return; 
-        }
+        const addToCartForm = document.getElementById('add-to-cart-form');
+        const cartCountElement = document.querySelector('.cart-count');
 
-        const productId = addToCartBtn.dataset.productId;
-        const quantityDisplay = document.getElementById(`qty-${productId}`);
+        if (addToCartForm) {
+            addToCartForm.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-        // Ensure the quantity display exists
-        if (!quantityDisplay) {
-            console.error(`Error: Quantity display element with ID 'qty-${productId}' not found.`);
-            return; 
-        }
-
-        const plusBtn = document.querySelector('.plus-btn');
-        const minusBtn = document.querySelector('.minus-btn');
-
-        // Quantity controls logic for the detail page
-        if (plusBtn) {
-            plusBtn.addEventListener('click', function() {
-                let currentQuantity = parseInt(quantityDisplay.textContent);
-                currentQuantity++;
-                quantityDisplay.textContent = currentQuantity;
-            });
-        }
-
-        if (minusBtn) {
-            minusBtn.addEventListener('click', function() {
-                let currentQuantity = parseInt(quantityDisplay.textContent);
-                if (currentQuantity > 1) { 
-                    currentQuantity--;
-                    quantityDisplay.textContent = currentQuantity;
-                }
-            });
-        }
-
-        // Add to Cart button logic for the detail page
-        addToCartBtn.addEventListener('click', function() {
-            const quantity = parseInt(quantityDisplay.textContent);
-            sendAddToCartRequest(productId, quantity);
-        });
-
-        // Centralized function to send Add To Cart/Update Cart request
-        function sendAddToCartRequest(prodId, qty) {
-            const data = {
-                product_id: parseInt(prodId),
-                quantity: qty
-            };
-
-            fetch('{% url "add_to_cart" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken'),
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => { 
-                        throw new Error(errorData.message || 'Server error occurred during add to cart.'); 
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    showNotification(data.message);
-                    // Optional: Update cart icon count in the header
-                    // updateCartIconDisplay(data.item_count);
-                } else {
-                    alert('Error: ' + data.message); 
-                }
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-                alert('An error occurred: ' + error.message + '. Please try again.');
+                const formData = new FormData(addToCartForm);
+                const data = {
+                    product_id: formData.get('product_id'),
+                    quantity: parseInt(formData.get('quantity')) || 1
+                };
+                
+                // Assuming you have a URL for your add_to_cart view
+                fetch("{% url 'add_to_cart' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert(result.message);
+                        if (cartCountElement) {
+                            // Update the count with the number returned from the server
+                            cartCountElement.textContent = result.item_count;
+                        }
+                    } else {
+                        alert(result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
             });
         }
     });
