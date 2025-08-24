@@ -1,40 +1,105 @@
-
-
 {% extends "dbApp/base.html" %}
 
 {% block title %}Purchase Schedule{% endblock %}
 
 {% block content %}
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
+    <div class="row">
+        <!-- Left: Product Image -->
+        <div class="col-lg-4">
+            <div class="card shadow p-3 mb-3">
+                <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
+                <h5 class="mt-2">{{ product.name }}</h5>
+                <p>Unit Price: ₹{{ product.price }}</p>
+            </div>
+        </div>
+
+        <!-- Right: Schedule Form & Order Summary -->
+        <div class="col-lg-8">
             <div class="card shadow p-4">
                 <h2 class="mb-4 text-center">Schedule Order</h2>
 
-               <form method="post">
-    {% csrf_token %}
+                <form method="post" id="scheduleForm">
+                    {% csrf_token %}
 
-    <!-- Dates -->
-    <div class="mb-3">
-        <label class="form-label">Start Date</label>
-        {{ form.start_date }}
-    </div>
-    <div class="mb-3">
-        <label class="form-label">End Date</label>
-        {{ form.end_date }}
-    </div>
+                    <!-- Frequency -->
+                    <div class="mb-3">
+                        <label class="form-label">Delivery Frequency</label>
+                        {{ form.frequency }}
+                    </div>
 
-    <!-- Delivery Time -->
-    <div class="mb-3">
-        <label class="form-label">Preferred Delivery Time</label>
-        {{ form.delivery_time }}
-    </div>
+                    <!-- Dates -->
+                    <div class="mb-3">
+                        <label class="form-label">Start Date</label>
+                        {{ form.start_date }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">End Date</label>
+                        {{ form.end_date }}
+                    </div>
 
-    <button type="submit" class="btn btn-success w-100">Proceed To Checkout</button>
-</form>
+                    <hr>
 
+                    <!-- Order Summary -->
+                    <h5>Order Summary</h5>
+                    <div class="mb-2">Unit Cost: ₹<span id="unitCost">{{ product.price }}</span></div>
+                    <div class="mb-2">Number of Units: <span id="numUnits">0</span></div>
+                    <div class="mb-2">Subtotal: ₹<span id="subtotal">0</span></div>
+                    <div class="mb-2">Delivery Fee: ₹<span id="deliveryFee">30</span></div>
+                    <div class="mb-2 fw-bold">Total: ₹<span id="total">0</span></div>
+
+
+                   <form id="checkoutForm" method="post" action="{% url 'payment' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="subtotal" id="checkoutSubtotal">
+                        <input type="hidden" name="delivery_fee" value="30">
+                        <button type="submit" class="btn btn-success w-100 mt-3">Proceed to Checkout</button>
+                    </form>
+
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function calculateUnits() {
+    const startDate = new Date(document.getElementById("id_start_date").value);
+    const endDate = new Date(document.getElementById("id_end_date").value);
+    const frequency = document.getElementById("id_frequency").value;
+    const unitCost = parseFloat(document.getElementById("unitCost").textContent);
+    const deliveryFee = 30;
+
+    if (!startDate || !endDate || endDate <= startDate) return;
+
+    let diffDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    let units = 0;
+
+    switch(frequency) {
+        case "daily": units = diffDays; break;
+        case "weekly": units = Math.ceil(diffDays / 7); break;
+        case "every_10_days": units = Math.ceil(diffDays / 10); break;
+        case "every_15_days": units = Math.ceil(diffDays / 15); break;
+        case "monthly": units = Math.ceil(diffDays / 30); break;      // Always 30 days
+        case "every_3_months": units = Math.ceil(diffDays / 90); break; // Always 90 days
+    }
+
+    const subtotal = units * unitCost;
+    const total = subtotal + deliveryFee;
+
+    document.getElementById("numUnits").textContent = units;
+    document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+    document.getElementById("total").textContent = total.toFixed(2);
+}
+
+document.getElementById("id_start_date").addEventListener("change", calculateUnits);
+document.getElementById("id_end_date").addEventListener("change", calculateUnits);
+document.getElementById("id_frequency").addEventListener("change", calculateUnits);
+document.getElementById("checkoutForm").addEventListener("submit", function() {
+    const subtotal = parseFloat(document.getElementById("subtotal").textContent);
+    document.getElementById("checkoutSubtotal").value = subtotal.toFixed(2);
+});
+
+</script>
+
 {% endblock %}

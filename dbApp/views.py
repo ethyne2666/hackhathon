@@ -18,9 +18,6 @@ import requests
 from .forms import ScheduleForm
 from django.contrib import messages
 
-
-
-
 def aboutus(request):
     return render(request,'dbApp/aboutus.html')
 
@@ -115,15 +112,18 @@ def myProfile(request):
     return render(request, 'dbApp/myProfile.html', {'user': user})
 
 
-
-
-
-
 # payment page 
 
-
 def payment_page(request):
-    # Example: Get totals from session/cart
+    if request.method == "POST":
+        subtotal = float(request.POST.get("subtotal", 0))
+        delivery_fee = float(request.POST.get("delivery_fee", 30))
+
+        # Save in session so later steps still have them
+        request.session["subtotal"] = subtotal
+        request.session["delivery_fee"] = delivery_fee
+
+    # Read from session (either from above or fallback)
     subtotal = request.session.get("subtotal", 0)
     delivery_fee = request.session.get("delivery_fee", 30)
     total = subtotal + delivery_fee
@@ -133,7 +133,6 @@ def payment_page(request):
         "delivery_fee": delivery_fee,
         "total": total
     })
-
 
 def process_payment(request):
     if request.method == "POST":
@@ -444,27 +443,7 @@ def purchase_schedule(request):
         if form.is_valid():
             # ✅ Valid form: Save or process subscription
             # For now just redirect or show success
-            return render(request, "dbApp/success.html", {
-                "product": product,
-                "price": price,
-                "form": form,
-            })
-        else:
-            # ❌ Invalid form: Errors will be available in form.errors
-            return render(request, "dbApp/purchase_schedule.html", {
-                "form": form,
-                "product": product,
-                "price": price,
-            })
-
-    else:  # GET request
-        form = ScheduleForm()
-        return render(request, "dbApp/purchase_schedule.html",{"form": form})
-
-
-
-
-
+            from django.shortcuts import redirect
 
 def initiate_phonepe_payment(request):
     """
@@ -478,3 +457,71 @@ def initiate_phonepe_payment(request):
         messages.success(request, "PhonePe payment initiated! Please complete the transaction.")
         return redirect('index') # Redirect to home page or a success page
     return render(request, 'dbApp/payment.html') # Or a page showing payment details
+
+
+# added calander to the detail page
+from django.shortcuts import render, get_object_or_404, redirect
+from datetime import date
+from .forms import ScheduleForm
+from .models import Product
+
+from django.shortcuts import render, get_object_or_404, redirect
+from datetime import date
+from .forms import ScheduleForm
+from .models import Product
+
+def purchase_schedule(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    price = product.price
+
+    if request.method == "POST":
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            frequency = form.cleaned_data['frequency']
+
+            # 🟢 Calculate number of units based on frequency
+            diff_days = (end_date - start_date).days + 1
+            units = 0
+            if frequency == "daily":
+                units = diff_days
+            elif frequency == "weekly":
+                units = -(-diff_days // 7)   # ceil
+            elif frequency == "every_10_days":
+                units = -(-diff_days // 10)
+            elif frequency == "every_15_days":
+                units = -(-diff_days // 15)
+            elif frequency == "monthly":
+                units = -(-diff_days // 30)
+            elif frequency == "every_3_months":
+                units = -(-diff_days // 90)
+
+            subtotal = units * price
+            delivery_fee = 30
+            total = subtotal + delivery_fee
+
+            # 🟢 Store values in session so payment page can access
+            request.session["subtotal"] = float(subtotal)
+            request.session["delivery_fee"] = float(delivery_fee)
+            request.session["total"] = float(total)
+
+            # 🔀 Redirect straight to payment page
+            return redirect("payment")
+
+        else:
+            # Invalid form: render with errors
+            return render(request, "dbApp/purchase_schedule.html", {
+                "form": form,
+                "product": product,
+                "price": price,
+            })
+
+    else:
+        # GET request: show empty form
+        form = ScheduleForm(initial={'start_date': date.today()})
+        return render(request, "dbApp/purchase_schedule.html", {
+            "form": form,
+            "product": product,
+            "price": price,
+        })
