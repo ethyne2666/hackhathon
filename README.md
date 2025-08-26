@@ -100,6 +100,6 @@ This project is open-source. Feel free to use, improve, and share with proper cr
 
 ## 🔗 Links
 - Project GitHub Repo: [https://github.com/ethyne2666/hackhathon.git]  
-- Hackathon Journey Blog Post: [Add your LinkedIn/Medium post here]  
+- Hackathon Journey Blog Post: [https://www.linkedin.com/posts/charan-kumar-ab5568311_failed-my-first-hackathon-status-code-2-activity-7366140843952336897-D5gW?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAE9IbikBW96zQqil07xmvUZxaH5MQ-JIVOI]  
 
 ---
