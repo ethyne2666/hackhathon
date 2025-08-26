@@ -434,6 +434,8 @@ def remove_from_cart(request, product_id):
 # added calander to the detail page
 
 
+
+
 def purchase_schedule(request):
     if request.method == "POST":
         form = ScheduleForm(request.POST)
@@ -446,7 +448,12 @@ def purchase_schedule(request):
             # For now just redirect or show success
             from django.shortcuts import redirect
 
+
+
+
+
 def initiate_phonepe_payment(request):
+
     """
     Placeholder view for initiating a PhonePe payment.
     You will add your PhonePe API integration logic here.

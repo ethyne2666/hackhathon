@@ -1,126 +1,469 @@
 
-/* Product Detail Page Styles */
-.product-detail-page {
-padding: 30px 0;
-background-color: #f8f9fa; /* Light grey background */
+.product-detail-container {
+
+max-width: 1100px;
+
+margin: 0 auto;
+
+background-color: #fff;
+
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+
+border-radius: 10px;
+
+overflow: hidden;
+
+display: flex;
+
+padding: 30px;
+
 }
 
-.product-detail-container {
-max-width: 1100px;
-margin: 0 auto;
-background-color: #fff;
-box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-border-radius: 10px;
-overflow: hidden;
-display: flex;
-padding: 30px;
-}
+
 
 .product-detail-image-box {
+
 flex: 0 0 40%;
+
 padding-right: 30px;
+
 border-right: 1px solid #eee;
+
 }
+
+
 
 .product-detail-image {
+
 width: 100%;
+
 height: auto;
+
 border-radius: 8px;
+
 object-fit: cover;
+
 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
 }
+
+
 
 .product-detail-info-box {
+
 flex: 1;
+
 padding-left: 30px;
+
 display: flex;
+
 flex-direction: column;
+
 }
+
+
 
 .product-detail-name {
+
 font-size: 2.5em;
+
 color: #333;
+
 margin-bottom: 10px;
+
 }
+
+
 
 .product-detail-category {
+
 color: #777;
+
 font-size: 1.1em;
+
 margin-bottom: 20px;
+
 }
+
+
 
 .product-detail-price {
+
 color: #28a745; /* Green price */
+
 font-size: 2em;
+
 font-weight: bold;
+
 margin-bottom: 25px;
+
 }
+
+
 
 .product-detail-description {
+
 color: #555;
+
 line-height: 1.7;
+
 margin-bottom: 30px;
+
 }
+
+
 
 /* Quantity Control */
+
 .quantity-control-detail {
+
 display: flex;
+
 align-items: center;
+
 margin-bottom: 20px;
+
 }
+
+
 
 .btn-quantity-detail {
+
 background-color: #f2f2f2;
+
 color: #555;
+
 border: 1px solid #ddd;
+
 padding: 8px 12px;
+
 font-size: 1em;
+
 cursor: pointer;
+
 border-radius: 5px;
+
 transition: background-color 0.3s ease;
+
 }
+
+
 
 .btn-quantity-detail:hover {
+
 background-color: #e0e0e0;
+
 }
+
+
 
 .quantity-display {
+
 margin: 0 15px;
+
 font-size: 1.2em;
+
 font-weight: bold;
+
 color: #333;
+
 }
+
+
 
 /* Add to Cart Button */
+
 .btn-add-to-cart-detail {
+
 background-color: #28a745; /* Green add to cart */
+
 color: white;
+
 border: none;
+
 padding: 15px 30px;
+
 font-size: 1.1em;
+
 font-weight: bold;
+
 border-radius: 8px;
+
 cursor: pointer;
+
 transition: background-color 0.3s ease;
+
 margin-bottom: 20px;
+
 }
+
+
 
 .btn-add-to-cart-detail:hover {
+
 background-color: #218838;
+
 }
+
+
 
 /* Stock Status */
+
 .stock-status-detail {
+
 font-size: 1em;
+
 color: #555;
+
 }
+
+
 
 .stock-status-detail.in-stock {
+
 color: #198754; /* More vibrant green for in stock */
+
 font-weight: bold;
+
 }
 
+
+
 .stock-status-detail.out-of-stock {
+
 color: #dc3545; /* Red for out of stock */
-font-weight: bold;
+
+font-weight: bold;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* General container for the schedule page */
+.schedule-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the top */
+    padding: 40px 20px;
+    background-color: #f8f9fa; /* Light background */
+    min-height: calc(100vh - 180px); /* Adjust based on header/footer height */
+}
+
+.schedule-container {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures rounded corners are respected */
+    width: 100%;
+    max-width: 1000px; /* Max width for content */
+}
+
+/* Product Info Panel (Left Side) */
+.product-info-panel {
+    flex: 1; /* Takes one part of the space */
+    padding: 30px;
+    background-color: #e6ffe6; /* Light green background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-right: 1px solid #d4ffd4;
+}
+
+.product-info-panel .product-card-container {
+    max-width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.product-info-panel .product-image {
+    width: 100%;
+    height: 180px;
+    object-fit: contain; /* Ensure image fits well */
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.product-info-panel .product-name {
+    font-size: 1.6em;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.product-info-panel .product-price {
+    font-size: 1.2em;
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Schedule Form Panel (Right Side) */
+.schedule-form-panel {
+    flex: 2; /* Takes two parts of the space */
+    padding: 30px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align form content to the top */
+}
+
+.schedule-form-container {
+    width: 100%;
+    max-width: 500px; /* Constrain form width */
+    margin: 0 auto; /* Center the form within its panel */
+}
+
+.form-title {
+    font-size: 2em;
+    color: #28a745; /* Green theme color */
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Styling for form inputs (select, date inputs) */
+.form-group select,
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #333;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    -webkit-appearance: none; /* Remove default styling for select/date */
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box; /* Include padding/border in element's total width/height */
+}
+
+.form-group select:focus,
+.form-group input[type="date"]:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    outline: none;
+}
+
+.summary-divider {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(40, 167, 69, 0.75), rgba(0, 0, 0, 0));
+    margin: 30px 0;
+}
+
+.summary-title {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.summary-line span {
+    font-weight: 500;
+}
+
+.summary-line.total-line {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #28a745;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
+}
+
+/* Proceed to Checkout Button */
+.btn-schedule-checkout {
+    display: block;
+    width: 100%;
+    padding: 15px 25px;
+    background-color: #28a745; /* Green theme color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 30px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-schedule-checkout:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .schedule-container {
+        flex-direction: column;
+        max-width: 90%;
+        padding: 0; /* Remove container padding for full width on mobile */
+    }
+
+    .product-info-panel {
+        border-right: none;
+        border-bottom: 1px solid #d4ffd4;
+        padding: 20px;
+    }
+
+    .schedule-form-panel {
+        padding: 20px;
+    }
+
+    .form-title {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .summary-title {
+        font-size: 1.5em;
+    }
+    
+    .summary-line, .summary-line.total-line {
+        font-size: 1em;
+    }
+
+    .btn-schedule-checkout {
+        font-size: 1em;
+        padding: 12px 20px;
+    }
 }
