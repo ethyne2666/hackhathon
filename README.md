@@ -1,3 +1,4 @@
+
 # 🛒 Daily Basis – Essential Delivery Web App
 
 Daily Basis is a subscription-based e-commerce web application built with **Django**.  
@@ -19,6 +20,32 @@ Our aim was to create a real-world solution for daily essential deliveries with 
 
 ---
 
+## 📷 Screenshots
+
+Below are some screenshots of the web application to give an overview of the UI:
+
+### 🛒 Shopping Cart
+Shows products added to cart and order summary with checkout option.  
+![Cart](images%20for%20readme/cart.jpeg)
+
+### 📦 Items Page
+Displays available daily essentials (milk, bread, eggs, vegetables, etc.) for subscription or one-time orders.  
+![Items](images%20for%20readme/items.jpeg)
+
+### 💳 Payment Page
+Checkout and payment integration for subscriptions or single orders.  
+![Payment](images%20for%20readme/payment.jpeg)
+
+### ⏰ Scheduled Orders
+Schedule your deliveries daily or weekly at fixed times (morning/evening).  
+![Scheduler](images%20for%20readme/scheduleroder.jpeg)
+
+### 🔍 Search Functionality
+Search products easily using the built-in search bar.  
+![Search](images%20for%20readme/search.jpeg)
+
+---
+
 ## 🤝 How to Contribute
 
 We welcome contributions! Follow the steps below to get started:
@@ -30,6 +57,7 @@ Click on the **Fork** button (top-right) to make your own copy of this repo.
 ```bash
 git clone https://github.com/<your-username>/dailybasis.git
 cd dailybasis
+
 ```
 
 ### 3️⃣ Setup Virtual Environment
